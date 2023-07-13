@@ -8,7 +8,7 @@ def initialize():
 
     # Indicates the streamer's ID
     global owner_id
-    owner_id = None  # Here the streamer's ID will be automatically put
+    owner_id = None  # Here the streamer's ID will be put automatically
 
     # Indicates the bot's username
     global bot_username
@@ -17,7 +17,7 @@ def initialize():
 
     # Indicates the bot's ID
     global bot_id
-    bot_id = None  # Here the bot's ID will be automatically put
+    bot_id = None  # Here the bot's ID will be put automatically
 
     # Indicates the bot's OATH token
     global bot_OATH_token
@@ -25,7 +25,7 @@ def initialize():
 
     # Indicates the bot's user access token
     global bot_access_token
-    bot_access_token = None  # Here the user access token of the bot will be automatically put
+    bot_access_token = None  # Here the user access token of the bot will be put automatically
 
     # Indicates the bot's client ID
     global bot_client_id
