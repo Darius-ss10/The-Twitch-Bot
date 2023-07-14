@@ -1,3 +1,7 @@
+# Imports
+from time import time
+
+
 # Global variables
 def initialize():
     # Variables for the owner of the channel and the bot
@@ -34,3 +38,37 @@ def initialize():
     # Indicates the bot's client secret
     global bot_client_secret
     bot_client_secret = ""  # Here you have to put the client secret of the bot
+
+
+    # Variables for Vons
+    # Indicates the moment when all chatters will receive some Vons
+    global time_points
+    time_points = time() + 600
+
+    # Indicates the moment when the messages with infos about Vons and commands will be sent
+    global time_help
+    time_help = time() + 1800
+
+    # Indicates all users that have sent at least one message in the last X minutes
+    global chat
+    chat = []
+
+    # Indicates all users that have sent al least one message from the beginning of the stream
+    global all
+    all = []
+
+    # Indicates all users from the database
+    global data
+    data = []
+
+    # All subs
+    global all_subs
+    all_subs = []
+
+    # All plebs
+    global all_plebs
+    all_plebs = []
+
+    # Indicates the names of the bots who will never receive Vons
+    global no_vons
+    no_vons = ['Nightbot', 'StreamElements']

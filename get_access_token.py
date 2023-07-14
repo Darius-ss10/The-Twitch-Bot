@@ -10,14 +10,14 @@ def get_access_token():
 
     token_url = 'https://id.twitch.tv/oauth2/token'
 
-    # Acces the database
+    # Access the database
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
 
     cursor.execute("SELECT refresh_token FROM Tokens ORDER BY rowid LIMIT 1")
     result = cursor.fetchone()
 
-    if result is not None:
+    if result:
         first_value = result[0]
     else:
         print("Table is empty")

@@ -3,7 +3,7 @@ import requests
 import global_variables as gv
 from get_access_token import get_access_token
 
-def get_user_id(username):
+def get_user_id(username, recursion_count=0):
 
     if username[0] == '@':
         username = username[1:]
@@ -30,4 +30,7 @@ def get_user_id(username):
         # Request failed
         print(f"API request failed with status code {response.status_code}: {response.text}")
         gv.bot_access_token = get_access_token()
-        return get_user_id(username)
+        if recursion_count < 1:
+            return get_user_id(username, recursion_count + 1)
+        else:
+            raise Exception(f"API request failed with status code {response.status_code}: {response.text}")

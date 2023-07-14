@@ -25,7 +25,7 @@ def get_refresh_token():
         # Request successful
         response_json = response.json()
 
-        # Acces the database
+        # Access the database
         conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
         # Check if the table is empty

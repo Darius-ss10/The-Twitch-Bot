@@ -1,6 +1,8 @@
 # Imports
 import irc.bot
+from time import time
 import global_variables as gv
+from points import points_chat, points_user, mods_points
 
 # The TwitchBot class
 class TwitchBot(irc.bot.SingleServerIRCBot):
@@ -37,18 +39,63 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
     # The bot analyses chat messages
     def on_pubmsg(self, c, e):
 
-        # Information about the user
-        tags = {}
-        for i in range(len(e.tags)):
-            tags[e.tags[i]["key"]] = e.tags[i]["value"]
+        # Add chatter
+        if e.tags["display-name"] not in gv.chat and e.tags["display-name"] not in gv.no_vons:
+            gv.chat.append(e.tags["display-name"])
+
+        if e.tags["display-name"] not in gv.all and e.tags["display-name"] not in gv.no_vons:
+            gv.all.append(e.tags["display-name"])
+
+        # Vons for chatters
+        if time() > gv.time_points:
+            points_chat()
+
+        # Verify if the chatter is a sub
+        if e.tags["subscriber"] == "1" and e.tags["display-name"] not in gv.all_subs \
+                and e.tags["display-name"] not in gv.no_vons:
+
+            user = e.tags["display-name"]
+            if user in gv.all_plebs:
+                gv.all_plebs.remove(user)
+            gv.all_subs.append(user)
+
+
+        # Verify if the chatter isn't a sub
+        elif e.tags["subscriber"] == "0" and e.tags["display-name"] not in gv.all_plebs \
+                and e.tags["display-name"] not in gv.no_vons:
+
+            user = e.tags["display-name"]
+            if user in gv.all_subs:
+                gv.all_subs.remove(user)
+            gv.all_plebs.append(user)
 
         # Global commands
         if e.arguments[0][:1] == '!':
             cmd = e.arguments[0].split(' ')[0][1:]
 
+            # Verify how many Vons have the user
+            if cmd == "vons":
+                user = e.tags["display-name"]
+                try:
+                    other_user = e.arguments[0].split()
+                    other_user = other_user[1]
+                except:
+                    other_user = None
+                points_user(self, user, other_user)
+
 
         # MODS only commands
-        if e.arguments[0][:1] == '!' and (tags["mod"] == "1" or tags["display-name"].lower() == gv.owner):
+        if e.arguments[0][:1] == '!' and (e.tags["mod"] == "1" or e.tags["display-name"].lower() == gv.owner):
             cmd = e.arguments[0].split(' ')[0][1:]
-            mod = tags["display-name"]
-            print(f"Command: {cmd} | Mod: {mod}")
+            mod = e.tags["display-name"]
+
+            # Mods can give Vons to chatters
+            if cmd == "give_vons":
+                try:
+                    info = e.arguments[0].split()
+                    user = info[1]
+                    nr_points = int(info[2])
+                except:
+                    user = None
+                    nr_points = None
+                mods_points(self, mod, user, nr_points, True)
