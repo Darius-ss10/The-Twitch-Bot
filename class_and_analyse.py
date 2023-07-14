@@ -3,6 +3,9 @@ import irc.bot
 from time import time
 import global_variables as gv
 from points import points_chat, points_user, mods_points
+from games.games_roulette import roulette
+from games.games_blackjack import blackjack, pen_blackjack
+from games.games_activate import on, off, on_auto, off_auto
 
 # The TwitchBot class
 class TwitchBot(irc.bot.SingleServerIRCBot):
@@ -38,33 +41,78 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
 
     # The bot analyses chat messages
     def on_pubmsg(self, c, e):
+        # Information about the chatter
+        tags = {}
+        for i in range(len(e.tags)):
+            tags[e.tags[i]["key"]] = e.tags[i]["value"]
 
         # Add chatter
-        if e.tags["display-name"] not in gv.chat and e.tags["display-name"] not in gv.no_vons:
-            gv.chat.append(e.tags["display-name"])
+        if tags["display-name"] not in gv.chat and tags["display-name"] not in gv.no_vons:
+            gv.chat.append(tags["display-name"])
 
-        if e.tags["display-name"] not in gv.all and e.tags["display-name"] not in gv.no_vons:
-            gv.all.append(e.tags["display-name"])
+        if tags["display-name"] not in gv.all and tags["display-name"] not in gv.no_vons:
+            gv.all.append(tags["display-name"])
+
+        # Blackjack on/off auto
+        # Off
+        if gv.bj_off_auto and gv.on_bj and gv.user_blackjack is None:
+            off_auto(self)
+
+        if "The stream game has been updated to: Marbles On Stream" in e.arguments[0]:
+            if gv.on_bj and gv.user_blackjack is None:
+                off_auto(self)
+
+            elif gv.on_bj and gv.user_blackjack is not None:
+                gv.bj_off_automat = True
+
+        elif "The stream game has been updated to: Just Chatting" in e.arguments[0]:
+            if gv.on_bj and gv.user_blackjack is None:
+                off_auto(self)
+
+            elif gv.on_bj and gv.user_blackjack is not None:
+                gv.bj_off_automat = True
+
+        elif "The stream game has been updated to: Food & Drink" in e.arguments[0]:
+            if gv.on_bj and gv.user_blackjack is None:
+                off_auto(self)
+
+            elif gv.on_bj and gv.user_blackjack is not None:
+                gv.bj_off_automat = True
+
+        elif "The stream game has been updated to: Travel & Outdoors" in e.arguments[0]:
+            if gv.on_bj and gv.user_blackjack is None:
+                off_auto(self)
+
+            elif gv.on_bj and gv.user_blackjack is not None:
+                gv.bj_off_automat = True
+
+        # On
+        elif "The stream game has been updated to: " in e.arguments[0] and not gv.on_bj:
+            on_auto(self)
 
         # Vons for chatters
         if time() > gv.time_points:
             points_chat()
 
-        # Verify if the chatter is a sub
-        if e.tags["subscriber"] == "1" and e.tags["display-name"] not in gv.all_subs \
-                and e.tags["display-name"] not in gv.no_vons:
+        # Penalty blackjack
+        if gv.user_blackjack is not None and time() > gv.pen_blackjack:
+            pen_blackjack(self, gv.user_blackjack, gv.bet_blackjack)
 
-            user = e.tags["display-name"]
+        # Verify if the chatter is a sub
+        if tags["subscriber"] == "1" and tags["display-name"] not in gv.all_subs \
+                and tags["display-name"] not in gv.no_vons:
+
+            user = tags["display-name"]
             if user in gv.all_plebs:
                 gv.all_plebs.remove(user)
             gv.all_subs.append(user)
 
 
         # Verify if the chatter isn't a sub
-        elif e.tags["subscriber"] == "0" and e.tags["display-name"] not in gv.all_plebs \
-                and e.tags["display-name"] not in gv.no_vons:
+        elif tags["subscriber"] == "0" and tags["display-name"] not in gv.all_plebs \
+                and tags["display-name"] not in gv.no_vons:
 
-            user = e.tags["display-name"]
+            user = tags["display-name"]
             if user in gv.all_subs:
                 gv.all_subs.remove(user)
             gv.all_plebs.append(user)
@@ -75,7 +123,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
 
             # Verify how many Vons have the user
             if cmd == "vons":
-                user = e.tags["display-name"]
+                user = tags["display-name"]
                 try:
                     other_user = e.arguments[0].split()
                     other_user = other_user[1]
@@ -83,11 +131,43 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
                     other_user = None
                 points_user(self, user, other_user)
 
+            # Blackjack when a round has already started
+            elif gv.user_blackjack == tags["display-name"] and cmd == "bj" and gv.on_bj:
+                try:
+                    temp = e.arguments[0].split()
+                    gv.choice_blackjack = temp[1]
+                except:
+                    pass
+                blackjack(self, gv.choice_blackjack, gv.user_blackjack, gv.bet_blackjack)
+
+
+            # Blackjack chen a round hasn't already started
+            elif cmd == "bj" and gv.user_blackjack is None and gv.on_bj:
+                gv.user_blackjack = tags["display-name"]
+                try:
+                    temp = e.arguments[0].split()
+                    gv.choice_blackjack = temp[1]
+                    gv.bet_blackjack = temp[2]
+                except:
+                    gv.bet_blackjack = None
+                blackjack(self, gv.choice_blackjack, gv.user_blackjack, gv.bet_blackjack)
+
+
+            # Roulette
+            # If the user is a mod, he can't play roulette because he can't be timed out
+            elif cmd == "roulette" and tags["mod"] != "1" and gv.on_roulette:
+                player = tags["display-name"]
+                if tags["subscriber"] == "1":
+                    sub = True
+                else:
+                    sub = False
+                roulette(self, player, sub)
+
 
         # MODS only commands
-        if e.arguments[0][:1] == '!' and (e.tags["mod"] == "1" or e.tags["display-name"].lower() == gv.owner):
+        if e.arguments[0][:1] == '!' and (tags["mod"] == "1" or tags["display-name"].lower() == gv.owner):
             cmd = e.arguments[0].split(' ')[0][1:]
-            mod = e.tags["display-name"]
+            mod = tags["display-name"]
 
             # Mods can give Vons to chatters
             if cmd == "give_vons":
@@ -99,3 +179,22 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
                     user = None
                     nr_points = None
                 mods_points(self, mod, user, nr_points, True)
+
+            # Minigames on
+            elif cmd == "on":
+                try:
+                    minigame = e.arguments[0].split()
+                    minigame = minigame[1]
+                except:
+                    minigame = None
+                on(self, mod, minigame)
+
+
+            # Minigames off
+            elif cmd == "off" and gv.user_blackjack is None:
+                try:
+                    minigame = e.arguments[0].split()
+                    minigame = minigame[1]
+                except:
+                    minigame = None
+                off(self, mod, minigame)
