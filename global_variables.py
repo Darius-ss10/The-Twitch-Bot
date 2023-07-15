@@ -191,3 +191,25 @@ def initialize():
     # Indicates the loto prize
     global prize_loto
     prize_loto = None
+
+
+    # Variable for the grinch command
+    # Indicates the moment when the grinch command will be available
+    global time_grinch
+    time_grinch = time()
+
+
+    # Variables for the give flowers command
+    # Indicates when the command will be available
+    global time_flower
+    time_flower = time()
+
+    # Indicates all the users that have already received at least one flower
+    global all_flower
+    all_flower = []
+
+
+    # Variable for wise command
+    # Indicates when the wise command will be available
+    global time_wise
+    time_wise = time()

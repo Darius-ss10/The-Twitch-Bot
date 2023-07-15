@@ -33,7 +33,7 @@ def mods_loto(self, nr_min, nr_max, prize, mod):
         # The winner number is chosen
         gv.number_loto = random.randint(nr_1, nr_2)
 
-        message = f"The loto round has started! The user which will guess the winner number between {nr_min} and " \
+        message = f"The loto round has started! The user which will guess the winning number between {nr_min} and " \
                   f"{nr_max} will receive {prize:n} Vons!"
         c.privmsg(self.channel, message)
 

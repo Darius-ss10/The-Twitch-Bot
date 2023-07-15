@@ -8,6 +8,10 @@ from games.games_blackjack import blackjack, pen_blackjack
 from games.games_activate import on, off, on_auto, off_auto
 from games.games_rps import rps, pen_rps
 from games.games_loto import mods_loto, win_loto
+from global_commands.love import love
+from global_commands.wise import wise
+from global_commands.grinch import grinch
+from global_commands.flower import flower, top_10_flower
 
 # The TwitchBot class
 class TwitchBot(irc.bot.SingleServerIRCBot):
@@ -212,6 +216,45 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
                 roulette(self, player, sub)
 
 
+            # Love
+            elif cmd == "love":
+                pers1 = tags["display-name"]
+                try:
+                    temp = e.arguments[0].split()
+                    pers2 = ""
+                    if len(temp) < 2:
+                        pers2 = None
+                    for i in range(1, len(temp)):
+                        pers2 += temp[i]
+                        if i != len(temp) - 1:
+                            pers2 += " "
+                except:
+                    pers2 = None
+                love(self, pers1, pers2)
+
+
+            # Wise
+            elif cmd == "wise":
+                user = tags["display-name"]
+                wise(self, user)
+
+
+            # Grinch
+            elif cmd == "grinch":
+                user = tags["display-name"]
+                if tags["subscriber"] == "1":
+                    sub = True
+                else:
+                    sub = False
+                grinch(self, user, sub)
+
+
+            # Give flower
+            elif cmd == "flower":
+                user = tags["display-name"]
+                flower(self, user)
+
+
         # MODS only commands
         if e.arguments[0][:1] == '!' and (tags["mod"] == "1" or tags["display-name"].lower() == gv.owner):
             cmd = e.arguments[0].split(' ')[0][1:]
@@ -261,3 +304,8 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
                     nr_max = None
                     prize = None
                 mods_loto(self, nr_min, nr_max, prize, mod)
+
+
+            # Top 10 flower
+            elif cmd == "topflower":
+                top_10_flower(self)
