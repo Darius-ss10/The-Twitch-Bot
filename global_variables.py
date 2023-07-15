@@ -69,6 +69,7 @@ def initialize():
     global no_vons
     no_vons = ['Nightbot', 'StreamElements']
 
+
     # Variables games on/off
     # Indicates if the blackjack minigame if on or off
     global on_bj
@@ -78,11 +79,16 @@ def initialize():
     global on_roulette
     on_roulette = True
 
+    # Indicates if the rock, paper, scissors minigame is on or off
+    global on_rps
+    on_rps = True
+
 
     # Variable for auto on/off blackjack when the streamer opens/closes a game
     # Auto on/off blackjack
     global bj_off_auto
     bj_off_auto = False
+
 
     # Variables for the roulette minigame
     # Indicates the time when the roulette will be available
@@ -92,6 +98,7 @@ def initialize():
     # Indicates the roulette's prize
     global roulette_prize
     roulette_prize = 1000
+
 
     # Variables for blackjack
     # Indicates the moment when the blackjack will be available
@@ -144,3 +151,43 @@ def initialize():
 
     global cards_blackjack_bot_final
     cards_blackjack_bot_final = ""
+
+
+    # Variables for the rock, paper, scissors minigame
+    # Indicates the moment when the game will be available
+    global time_rps
+    time_rps = time()
+
+    # Indicates the moment when the penalty will take place (if needed)
+    global pen_rps
+    pen_rps = time()
+
+    # Indicates the user which plays the game
+    global user_rps
+    user_rps = None
+
+    # Indicates the user's choice
+    global choice_rps
+    choice_rps = None
+
+    # Indicates the user's bet
+    global bet_rps
+    bet_rps = None
+
+    # Indicates if we have to check the player's number of Vons
+    global flag_points_rps
+    flag_points_rps = True
+
+    # Indicates how many Vons have the user which plays the game
+    global points_temp_rps
+    points_temp_rps = None
+
+
+    # Variables for loto
+    # Indicates the winner number
+    global number_loto
+    number_loto = None
+
+    # Indicates the loto prize
+    global prize_loto
+    prize_loto = None

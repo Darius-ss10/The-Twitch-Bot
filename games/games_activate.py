@@ -58,6 +58,16 @@ def on(self, mod, minigame):
         elif minigame == "roulette":
             message = f"{mod}, the roulette is already on."
 
+        # Rock, paper, scissors when it's off
+        elif minigame == "rps" and not gv.on_rps:
+            gv.on_rps = True
+            gv.time_rps = time()
+            message = f"{mod}, you have started the rock, paper, scissors minigame."
+
+        # Rock, paper, scissors when it's on
+        elif minigame == "rps":
+            message = f"{mod}, the rock, paper, scissors minigame is already on."
+
         # Minigame that doesn't exist
         else:
             message = f"{mod}, you wanted to start a minigame we don't have yet or you misspelled the command."
@@ -92,6 +102,15 @@ def off(self, mod, minigame):
         # Roulette when it's off
         elif minigame == "roulette":
             message = f"{mod}, the roulette is already turned off."
+
+        # Rock, paper, scissors when it's on
+        elif minigame == "rps" and gv.on_rps:
+            gv.on_rps = False
+            message = f"{mod}, you have stopped the rock, paper, scissors minigame."
+
+        # Rock, paper, scissors when it's off
+        elif minigame == "rps":
+            message = f"{mod}, the rock, paper, scissors minigame is already off."
 
         # Minigame that doesn't exist
         else:

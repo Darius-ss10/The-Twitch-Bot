@@ -6,6 +6,8 @@ from points import points_chat, points_user, mods_points
 from games.games_roulette import roulette
 from games.games_blackjack import blackjack, pen_blackjack
 from games.games_activate import on, off, on_auto, off_auto
+from games.games_rps import rps, pen_rps
+from games.games_loto import mods_loto, win_loto
 
 # The TwitchBot class
 class TwitchBot(irc.bot.SingleServerIRCBot):
@@ -46,12 +48,26 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         for i in range(len(e.tags)):
             tags[e.tags[i]["key"]] = e.tags[i]["value"]
 
+
+        # Verify which command is used
+        # Loto number
+        if len(e.arguments[0].split()) == 1 and gv.number_loto is not None:
+            try:
+                attempt = int(e.arguments[0].split()[0])
+                if attempt == gv.number_loto:
+                    player = tags["display-name"]
+                    win_loto(self, player)
+            except:
+                pass
+
+
         # Add chatter
         if tags["display-name"] not in gv.chat and tags["display-name"] not in gv.no_vons:
             gv.chat.append(tags["display-name"])
 
         if tags["display-name"] not in gv.all and tags["display-name"] not in gv.no_vons:
             gv.all.append(tags["display-name"])
+
 
         # Blackjack on/off auto
         # Off
@@ -90,13 +106,21 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         elif "The stream game has been updated to: " in e.arguments[0] and not gv.on_bj:
             on_auto(self)
 
+
         # Vons for chatters
         if time() > gv.time_points:
             points_chat()
 
+
+        # Penalty rock, papaer, scissors
+        if gv.user_rps is not None and time() > gv.pen_rps:
+            pen_rps(self, gv.user_rps, gv.bet_rps)
+
+
         # Penalty blackjack
         if gv.user_blackjack is not None and time() > gv.pen_blackjack:
             pen_blackjack(self, gv.user_blackjack, gv.bet_blackjack)
+
 
         # Verify if the chatter is a sub
         if tags["subscriber"] == "1" and tags["display-name"] not in gv.all_subs \
@@ -117,6 +141,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
                 gv.all_subs.remove(user)
             gv.all_plebs.append(user)
 
+
         # Global commands
         if e.arguments[0][:1] == '!':
             cmd = e.arguments[0].split(' ')[0][1:]
@@ -130,6 +155,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
                 except:
                     other_user = None
                 points_user(self, user, other_user)
+
 
             # Blackjack when a round has already started
             elif gv.user_blackjack == tags["display-name"] and cmd == "bj" and gv.on_bj:
@@ -151,6 +177,28 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
                 except:
                     gv.bet_blackjack = None
                 blackjack(self, gv.choice_blackjack, gv.user_blackjack, gv.bet_blackjack)
+
+
+            # Rock, paper, scissors when a game has already been started
+            elif gv.user_rps == tags["display-name"] and cmd == "rps" and gv.on_rps:
+                try:
+                    temp = e.arguments[0].split()
+                    gv.choice_rps = temp[1]
+                except:
+                    pass
+                rps(self, gv.choice_rps, gv.user_rps, gv.bet_rps)
+
+
+            # Rock, paper, scissors when a game hasn't already been started
+            elif cmd == "rps" and gv.user_rps is None and gv.on_rps:
+                gv.user_rps = tags["display-name"]
+                try:
+                    temp = e.arguments[0].split()
+                    gv.choice_rps = temp[1]
+                    gv.bet_rps = temp[2]
+                except:
+                    gv.bet_rps = None
+                rps(self, gv.choice_rps, gv.user_rps, gv.bet_rps)
 
 
             # Roulette
@@ -180,6 +228,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
                     nr_points = None
                 mods_points(self, mod, user, nr_points, True)
 
+
             # Minigames on
             elif cmd == "on":
                 try:
@@ -191,10 +240,24 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
 
 
             # Minigames off
-            elif cmd == "off" and gv.user_blackjack is None:
+            elif cmd == "off" and gv.user_blackjack is None and gv.user_rps is None:
                 try:
                     minigame = e.arguments[0].split()
                     minigame = minigame[1]
                 except:
                     minigame = None
                 off(self, mod, minigame)
+
+            # Loto
+            elif cmd == "loto":
+                try:
+                    rules = e.arguments[0].split()
+                    nr_min = rules[1]
+                    nr_max = rules[2]
+                    prize = rules[3]
+                    gv.prize_loto = int(prize)
+                except:
+                    nr_min = None
+                    nr_max = None
+                    prize = None
+                mods_loto(self, nr_min, nr_max, prize, mod)
