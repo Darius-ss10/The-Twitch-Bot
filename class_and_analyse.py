@@ -12,6 +12,10 @@ from global_commands.love import love
 from global_commands.wise import wise
 from global_commands.grinch import grinch
 from global_commands.flower import flower, top_10_flower
+from commands_mods.coinflip import mods_coinflip
+from commands_mods.category import mods_change_category
+from commands_mods.reset import reset
+
 
 # The TwitchBot class
 class TwitchBot(irc.bot.SingleServerIRCBot):
@@ -309,3 +313,33 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             # Top 10 flower
             elif cmd == "topflower":
                 top_10_flower(self)
+
+
+            # Coinflip
+            if cmd == 'coinflip':
+                try:
+                    user = e.arguments[0].split()
+                    user = user[1]
+                except:
+                    user = None
+                mods_coinflip(self, user, mod)
+
+
+            # Change category
+            elif cmd == "g":
+                try:
+                    category = e.arguments[0].split()
+                    category = category[1]
+                except:
+                    category = None
+                mods_change_category(self, category, mod)
+
+
+            # Reset flowers, Vons or Vips
+            elif cmd == "reset":
+                try:
+                    info = e.arguments[0].split()
+                    reset_table = info[1]
+                except:
+                    reset_table = None
+                reset(self, mod, reset_table)
