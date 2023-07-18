@@ -15,6 +15,7 @@ from global_commands.flower import flower, top_10_flower
 from commands_mods.coinflip import mods_coinflip
 from commands_mods.category import mods_change_category
 from commands_mods.reset import reset
+from global_commands.commands_help import commands, help, new_user
 
 
 # The TwitchBot class
@@ -40,7 +41,6 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
     def on_welcome(self, c, e):
         print(f"Joining {self.channel}")
 
-        # You must request specific capabilities before you can use them
         c.cap('REQ', ':twitch.tv/membership')
         c.cap('REQ', ':twitch.tv/tags')
         c.cap('REQ', ':twitch.tv/commands')
@@ -115,6 +115,13 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             on_auto(self)
 
 
+        # Message to help the chat
+        if time() > gv.time_help:
+            user = None
+            other_user = "@chat"
+            help(self, user, other_user)
+
+
         # Vons for chatters
         if time() > gv.time_points:
             points_chat()
@@ -128,6 +135,12 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         # Penalty blackjack
         if gv.user_blackjack is not None and time() > gv.pen_blackjack:
             pen_blackjack(self, gv.user_blackjack, gv.bet_blackjack)
+
+
+        # Message for the first time chatters
+        if tags["first-msg"] == "1":
+            user = tags["display-name"]
+            new_user(self, user)
 
 
         # Verify if the chatter is a sub
@@ -257,6 +270,28 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             elif cmd == "flower":
                 user = tags["display-name"]
                 flower(self, user)
+
+
+            # Commands
+            elif cmd == 'commands':
+                user = tags["display-name"]
+                try:
+                    other_user = e.arguments[0].split()
+                    other_user = other_user[1]
+                except:
+                    other_user = None
+                commands(self, user, other_user)
+
+
+            # Info Vons
+            elif cmd == "help":
+                user = tags["display-name"]
+                try:
+                    other_user = e.arguments[0].split()
+                    other_user = other_user[1]
+                except:
+                    other_user = None
+                help(self, user, other_user)
 
 
         # MODS only commands

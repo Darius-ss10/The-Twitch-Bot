@@ -213,3 +213,8 @@ def initialize():
     # Indicates when the wise command will be available
     global time_wise
     time_wise = time()
+
+
+    # Indicates the moment when the messages with infos about Vons and commands will be sent
+    global time_help
+    time_help = time() + 1800
