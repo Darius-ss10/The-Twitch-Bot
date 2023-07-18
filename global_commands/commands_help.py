@@ -9,7 +9,7 @@ import global_variables as gv
 def commands(self, user, other_user):
     c = self.connection
 
-    link = "https://prnt.sc/dLVvA9PEWpUj"
+    link = "https://prnt.sc/ljeeWXbHIEdD"
 
     # Basic command
     if other_user is None or other_user[0] != '@':
@@ -27,7 +27,7 @@ def help(self, user, other_user):
     c = self.connection
 
     link_vons = "https://prnt.sc/cVlxDh8ekjtZ"
-    link_commands = "https://prnt.sc/dLVvA9PEWpUj"
+    link_commands = "https://prnt.sc/ljeeWXbHIEdD"
 
     if user is not None:
         # Basic command
