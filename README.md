@@ -28,22 +28,23 @@ to manage the bot if it has its own account, and it will be less weird when the 
 6. Activate the 2FA on your bot's account.
    It will allow you to register an application for the bot on the Twitch Dev console.
    You can activate the 2FA on the bot's account [here](https://www.twitch.tv/settings/security).
-7. Register an application for the bot on the [Twitch Dev console](https://dev.twitch.tv/console/apps/create).
-   You can name your application as you want, it doesn't really matter.
-   You can set the OAuth Redirect URL to "http://localhost:3000".
-   (It will help us later to get an authorization code)
-   You can set the Category to "Chat Bot".
-   After you've created the application, you'll be able to see the Client ID and the Client Secret. 
+7. Register an application for the bot on the [Twitch Dev console](https://dev.twitch.tv/console/apps/create).<br />
+   You can name your application as you want, it doesn't really matter.<br />
+   Set the OAuth Redirect URL to "http://localhost:3000".
+   (It will help us later to get an authorization code)<br />
+   Set the Category to "Chat Bot".<br />
+   After you've created the application, you'll be able to see the bot's Client ID and the bot's Client Secret. 
    (We'll need them later)
-8. Generate your OAuth token.
-   You can use [this website](https://twitchapps.com/tmi/) to generate your OAuth token.
+8. Generate the bot's OAuth token.
+   You can use [this website](https://twitchapps.com/tmi/) to generate your bot's OAuth token.
    You'll have to log in with your bot's account. 
    The token will look like this: "oauth:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx".
    What's important to save is the part after "oauth:".
    (We'll need it later)
-9. Complete the file _global_variables.py_.
-   You'll have to replace the values of the variables with the values you got in the previous steps:
-   - _owner_ at line 10: put the Twitch channel the bot will connect to
+9. Fill the gaps in the file _global_variables.py_.
+   You'll have to replace the values of the variables with the values
+   (all those values should be placed into quotes) you got in the previous steps:
+   - _owner_ at line 10: put the name of the Twitch channel the bot will connect to
    - _bot_username_ at line 19: put the name of your bot's account
    - _bot_OATH_token_ at line 28: put the OAuth token you got in step 8
    - _bot_client_id_ at line 36: put the Client ID you got in step 7
@@ -53,9 +54,9 @@ to manage the bot if it has its own account, and it will be less weird when the 
     https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=<your_client_id>&redirect_uri=http://localhost:3000&scope=moderator%3Amanage%3Abanned_users
     (replace <your_client_id> with your bot's Client ID).
     A Twitch popup will appear and ask you to log in with your bot's account (if you're not already logged in.).
-    After that, you'll have to grant permission (i.e. click on the "Authorize" button).
+    After that, you'll have to grant permission (i.e. click on the "Authorize" button).<br />
     Then, you'll be redirected to a page with a URL like this:
-    http://localhost:3000/?code=<your_authorization_code>&scope=moderator%3Amanage%3Abanned_users
+    http://localhost:3000/?code=<your_authorization_code>&scope=moderator%3Amanage%3Abanned_users <br />
     Finally, you'll have to copy the value of the parameter "code"
     in the URL (i.e. <your_authorization_code>) and paste it in the file _global_variables.py_ at line 44.
 11. Run the file _get_refresh_token_first_time_use.py_.
@@ -65,13 +66,13 @@ to manage the bot if it has its own account, and it will be less weird when the 
     you can run the file
     by running the following command in the terminal: ```python3 /path/to/get_refresh_token_first_time_use.py```
     (Be aware that the authorization code you got in step 10 is usable only once, and it's used in this step. 
-    So, if for some reason (e.g. your refresh token is no longer valid) you have to run this step again, you'll have to generate a new authorization code.)
+    So, if for some reason (e.g. your refresh token is no longer valid) you have to do this step again, you'll have to generate a new authorization code.)
 
 ## How to run the bot
 Run the file _TwitchBot.py_.
 You can do it by right-clicking on the file and then clicking on "Run 'TwitchBot'" if you use PyCharm as your IDE.
 If you use another IDE,
-you can run the file by running the following command in the terminal: ```python3 /path/to/TwitcBot.py```
+you can run the file by running the following command in the terminal: ```python3 /path/to/TwitchBot.py```
 
 ## Description of the bot
 The bot has 3 main features:
@@ -80,17 +81,17 @@ The bot has 3 main features:
 - It can time out users
 
 This bot has an economy system that allows users to earn Vons (the currency of the bot)
-by watching the stream and to bet them by playing games.<br />
+by being active in the stream's chat and to bet them by playing games.<br />
 The accepted commands are:
 - !commands = show all the commands
-- !help = information about Vons
+- !help = show information about Vons
 - !vons = show how many Vons you have
-- !love = random love message (e.g. !love @user)
+- !love = random love percentage between 2 users (e.g. !love @user)
 - !bj = blackjack (e.g. !bj start 1000 or !bj start all)
 - !rps = rock, paper, scissors (e.g. !rps rock 2000 or !rps rock all)
 - !roulette = Russian roulette 
 - !wise = how wise the chatters were today 
-- !grinch = subs can steal Vons from plebs
+- !grinch = subs can steal Vons from plebs (aka non-subs)
 - !flower = give flowers to a random person in chat
 
 MODS only commands:
@@ -104,4 +105,65 @@ MODS only commands:
 - !reset = reset a table from the database (e.g. !reset table) (tables = vons, flowers, vips)
 
 
-## Description of some commands
+## Description of some commands and how I've designed them
+### Minigames: 
+All the minigames (bj, rps, roulette) are turned on by default except for the blackjack because for this 
+one, there are several messages that the bot can send in the chat, 
+and it can be annoying for the viewers if the streamer is doing Just Chatting.<br />
+The blackjack minigame turns on automatically 
+when the streamer starts playing a game and turns off automatically when the streamer goes back to Just Chatting.
+(The bot analyzes StreamElements'
+messages to know when the streamer starts playing a game and when he goes back to Just Chatting, 
+so this automatic feature will work only if you use StreamElements' bot in your channel)<br />
+All the minigames can be turned on/off by the streamer or the mods.<br />
+Each minigame has a different cooldown.<br />
+If there's a draw in the rock, paper, scissors game, and the user doesn't replay, he'll lose his bet. 
+If a user stops randomly in the middle of a blackjack game, he'll lose his bet.
+
+### Roulette: 
+The roulette is a Russian roulette.
+The starting prize is 1000 Vons, and it increases by 1000 Vons each time
+someone loses.
+If the user loses, he'll get a timeout of 3 minutes, and if he wins, he'll get the prize.
+(And the prize goes back to 1000 Vons)<br />
+This minigame is a subs only one.
+Maybe it will make more people subscribe to the channel ;)
+
+### Wise: 
+If the user was at least 70% wise, he'll win 5000 Vons and if he wasn't, he'll lose 1000 Vons.
+
+### Flower: 
+You can use this command to create a competition between the viewers.
+(Idea: the user who has the most flowers at the end of each month wins a prize)
+
+### Coinflip: 
+You can create a redeem with Channel Points on Twitch (just one per day, so it will make it more special), 
+and the user who redeems it will be able to play the coinflip. 
+If the result is heads, he'll win a VIP that will last until there will be another user who'll win the coinflip, 
+and if it's tails, he'll get a 24h timeout.
+
+### Loto: 
+You can create a redeem with Channel Points on Twitch, and each time a user redeems it,
+a mod (or the streamer) will have to run the !loto command.
+A random number between nr_min and nr_max will be generated,
+and the chatter who'll guess it will win the prize.
+
+### G: 
+You can use this command to change the stream's category on Twitch. 
+I've added this command because I wanted to add a simpler way to change the category of the stream on Twitch.
+In order to make this command work, you'll have to have StreamElements' bot in your channel.<br />
+I've already added some categories, but you can add more if you want. 
+You'll just have to add them in the file _category.py_ that you'll find in the folder _commands_mods_.
+The dictionary _categories_ that you can find at line 6 in that file has the following structure: 
+{"abbreviation": "the message the bot will send in chat"}. 
+For instance,
+if you want to change the stream's category directly in the Twitch chat to Just Chatting by using StreamElements' bot, 
+instead of typing "!game Just Chatting", 
+you'll only have to type "!g jc".
+
+
+## Ideas for what you can do with the Vons
+You could allow your viewers to redeem their Vons for a permanent VIP if they have enough Vons (like 3M Vons or something like that).
+
+
+## ENJOY!

@@ -2,7 +2,7 @@
 def mods_change_category(self, category, mod):
     c = self.connection
 
-    # "abbreviation": "the message the bot will send in chat",
+    # "abbreviation": "the message the bot will send in chat"
     categories = {"jc" : "!game Just Chatting",
                  "tft" : "!game Teamfight Tactics",
                  "m" : "!game Marbles on Stream",
