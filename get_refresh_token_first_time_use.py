@@ -14,7 +14,7 @@ def get_refresh_token():
     data = {
         'client_id': gv.bot_client_id,
         'client_secret': gv.bot_client_secret,
-        'code': '',    # Insert the authentication code here
+        'code': gv.bot_authorization_code,
         'grant_type': 'authorization_code',
         'redirect_uri': 'http://localhost:3000'
     }

@@ -7,7 +7,7 @@ def initialize():
     # Variables for the owner of the channel and the bot
     # Indicates the streamer's username
     global owner
-    owner = ""  # Here you have to put the channel the bot will connect to
+    owner = ""  # Here you have to put the channel the bot will connect to (variable type: string. Example: "Twitch")
     owner = owner.lower()
 
     # Indicates the streamer's ID
@@ -16,7 +16,7 @@ def initialize():
 
     # Indicates the bot's username
     global bot_username
-    bot_username = ""  # Here you have to put the bot's username
+    bot_username = ""  # Here you have to put the bot's username (variable type: string. Example: "Twitch")
     bot_username = bot_username.lower()
 
     # Indicates the bot's ID
@@ -25,7 +25,7 @@ def initialize():
 
     # Indicates the bot's OATH token
     global bot_OATH_token
-    bot_OATH_token = ""  # Here you have to put the OATH token of the bot
+    bot_OATH_token = ""  # Here you have to put the OATH token of the bot (variable type: string. Example: "1234anb7890")
 
     # Indicates the bot's user access token
     global bot_access_token
@@ -33,11 +33,15 @@ def initialize():
 
     # Indicates the bot's client ID
     global bot_client_id
-    bot_client_id = ""  # Here you have to put the client ID of the bot
+    bot_client_id = ""  # Here you have to put the client ID of the bot (variable type: string) (Example: "123sd45gsds90")
 
     # Indicates the bot's client secret
     global bot_client_secret
-    bot_client_secret = ""  # Here you have to put the client secret of the bot
+    bot_client_secret = ""  # Here you have to put the client secret of the bot (variable type: string) (Example: "1234q567sfs890")
+
+    # Indicates the bot's authorization code
+    global bot_authorization_code
+    bot_authorization_code = ""  # Here you have to put the authorization code of the bot (variable type: string) (Example: "1234q567sfs890")
 
 
     # Variables for Vons

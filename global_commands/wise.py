@@ -38,6 +38,6 @@ def wise(self, user):
     # The command when there's an active cooldown
     elif time() < gv.time_wise:
         time_left = int(gv.time_wise - time())
-        info = "next try."
+        info = "the next try."
 
         c.privmsg(self.channel, cooldown(time_left, user, info))
