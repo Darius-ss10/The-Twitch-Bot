@@ -3,6 +3,7 @@ import requests
 import global_variables as gv
 import sqlite3
 import os
+from dotenv import load_dotenv
 
 # Locate the database
 DATABASE = os.path.abspath("base.db")
@@ -49,5 +50,6 @@ def get_refresh_token():
         raise Exception(f"Refresh token request failed with status code {response.status_code}: {response.text}")
 
 if __name__ == "__main__":
+    load_dotenv()
     gv.initialize()
     get_refresh_token()
