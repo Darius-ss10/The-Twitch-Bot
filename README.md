@@ -58,7 +58,7 @@ to manage the bot if it has its own account, and it will be less weird when the 
     Then, you'll be redirected to a page with a URL like this:
     http://localhost:3000/?code=<your_authorization_code>&scope=moderator%3Amanage%3Abanned_users <br />
     Finally, you'll have to copy the value of the parameter "code"
-    in the URL (i.e. <your_authorization_code>) and paste it in the file _global_variables.py_ at line 44.
+    in the URL (i.e. <your_authorization_code>) and paste it in the [.env](./.env) file.
 11. Run the file _get_refresh_token_first_time_use.py_.
     You can do it by right-clicking on the file and then clicking on "Run 'get_refresh_token_first_time_use'"
     if you use PyCharm as your IDE.
