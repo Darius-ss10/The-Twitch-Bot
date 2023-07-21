@@ -41,14 +41,14 @@ to manage the bot if it has its own account, and it will be less weird when the 
    The token will look like this: "oauth:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx".
    What's important to save is the part after "oauth:".
    (We'll need it later)
-9. Fill the gaps in the file _global_variables.py_.
+9. Fill the [.env](./.env) file.
    You'll have to replace the values of the variables with the values
    (all those values should be placed into quotes) you got in the previous steps:
-   - _owner_ at line 10: put the name of the Twitch channel the bot will connect to
-   - _bot_username_ at line 19: put the name of your bot's account
-   - _bot_OATH_token_ at line 28: put the OAuth token you got in step 8
-   - _bot_client_id_ at line 36: put the Client ID you got in step 7
-   - _bot_client_secret_ at line 40: put the Client Secret you got in step 7
+   - _owner_ : put the name of the Twitch channel the bot will connect to
+   - _bot_username_ : put the name of your bot's account
+   - _bot_OATH_token_ : put the OAuth token you got in step 8
+   - _bot_client_id_ : put the Client ID you got in step 7
+   - _bot_client_secret_ : put the Client Secret you got in step 7
 10. The most tricky step: Generate an authorization code.
     Go to this link :
     https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=<your_client_id>&redirect_uri=http://localhost:3000&scope=moderator%3Amanage%3Abanned_users
