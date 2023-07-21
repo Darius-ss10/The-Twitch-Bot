@@ -3,6 +3,7 @@ from class_and_analyse import TwitchBot
 import global_variables as gv
 from get_access_token import get_access_token
 from get_user_id import get_user_id
+from dotenv import load_dotenv
 
 
 # The bot gets created
@@ -18,5 +19,6 @@ def main():
 
 # This starts the bot
 if __name__ == "__main__":
+    load_dotenv()
     gv.initialize()
     main()
