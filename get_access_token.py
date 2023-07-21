@@ -37,7 +37,7 @@ def get_access_token():
 
         # Update the refresh token
         cursor.execute("UPDATE Tokens SET refresh_token = ? WHERE rowid = 1", (response_json["refresh_token"],))
-        # Save and cloase the database
+        # Save and close the database
         conn.commit()
         conn.close()
         return response_json['access_token']
