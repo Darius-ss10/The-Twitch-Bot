@@ -54,14 +54,6 @@ def initialize():
     global chat
     chat = []
 
-    # Indicates all users that have sent al least one message from the beginning of the stream
-    global all
-    all = []
-
-    # Indicates all users from the database
-    global data
-    data = []
-
     # All subs
     global all_subs
     all_subs = []
@@ -208,10 +200,6 @@ def initialize():
     # Indicates when the command will be available
     global time_flower
     time_flower = time()
-
-    # Indicates all the users that have already received at least one flower
-    global all_flower
-    all_flower = []
 
 
     # Variable for wise command

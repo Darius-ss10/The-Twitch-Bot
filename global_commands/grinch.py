@@ -25,27 +25,21 @@ def grinch(self, user, sub):
                 pleb = gv.all_plebs[nr_pleb]
                 nr_points_stolen = 0
 
-                # The pleb is already in the database
+                # Check if the pleb is already in the database
                 temp_pleb = points_user_helper(pleb)
-                if pleb in gv.data:
-                    # Access the pleb's number of Vons
-                    if temp_pleb < nr_points:
-                        nr_points_stolen = temp_pleb
-                    else:
-                        nr_points_stolen = nr_points
 
-                    # The pleb is losing his points
-                    mods_points(self, None, pleb, -nr_points_stolen)
-
-                # The pleb isn't in the database, and he's added now
+                # Access the pleb's number of Vons
+                if temp_pleb < nr_points:
+                    nr_points_stolen = temp_pleb
                 else:
-                    # The pleb's Vons are set to 0
-                    mods_points(self, None, pleb, 0)
-                    nr_points_stolen = 0
+                    nr_points_stolen = nr_points
+
+                # The pleb is losing his points
+                mods_points(self, None, pleb, -nr_points_stolen)
 
                 # If no Vons were stolen
                 if nr_points_stolen == 0:
-                    message = f"{user}, sadly {pleb} protected himself and you weren't able to steal some Vons from him."
+                    message = f"{user}, sadly {pleb} protected himself, and you weren't able to steal some Vons from him."
 
                 # If some Vons were stolen
                 else:
@@ -66,9 +60,9 @@ def grinch(self, user, sub):
 
         # The user isn't a sub
         else:
-            message = f"{user}, !grinch is a subs only command."
+            message = f"{user}, !grinch is a subs-only command."
             c.privmsg(self.channel, message)
 
     else:
-        message = f"{user}, unfortunately there aren't any plebs to steal from yet."
+        message = f"{user}, unfortunately, there aren't any plebs to steal from yet."
         c.privmsg(self.channel, message)

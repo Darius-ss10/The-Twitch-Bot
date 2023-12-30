@@ -73,9 +73,6 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         if tags["display-name"] not in gv.chat and tags["display-name"] not in gv.no_vons:
             gv.chat.append(tags["display-name"])
 
-        if tags["display-name"] not in gv.all and tags["display-name"] not in gv.no_vons:
-            gv.all.append(tags["display-name"])
-
 
         # Blackjack on/off auto
         # Off
