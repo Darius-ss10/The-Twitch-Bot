@@ -1,14 +1,33 @@
 # Imports
-from time import time
 import os
+from time import time
+from dotenv import load_dotenv
 
+
+load_dotenv()
+
+def get_env_variable(env_var_name):
+    value = os.environ.get(env_var_name)
+
+    if not value:
+        print(f'No variables defined in system environment or .env for {env_var_name}, checking config.txt.')
+        try:
+            with open("config.txt", "r") as config_file:
+                for line in config_file:
+                    if line.startswith(f"{env_var_name}="):
+                        value = line.strip().split("=")[1].strip('"\n')
+                        break
+        except FileNotFoundError:
+            print(f'Warning: {env_var_name} is not found in config.txt.')
+
+    return value
 
 # Global variables
 def initialize():
     # Variables for the owner of the channel and the bot
     # Indicates the streamer's username
     global owner
-    owner = os.environ["OWNER"]  # Here you have to put the channel the bot will connect to (variable type: string. Example: "Twitch")
+    owner = get_env_variable('OWNER')  # Here you have to put the channel the bot will connect to (variable type: string. Example: "Twitch")
     owner = owner.lower()
 
     # Indicates the streamer's ID
@@ -17,7 +36,7 @@ def initialize():
 
     # Indicates the bot's username
     global bot_username
-    bot_username = os.environ["BOT_USERNAME"]  # Here you have to put the bot's username (variable type: string. Example: "Twitch")
+    bot_username = get_env_variable('BOT_USERNAME')  # Here you have to put the bot's username (variable type: string. Example: "Twitch")
     bot_username = bot_username.lower()
 
     # Indicates the bot's ID
@@ -26,7 +45,7 @@ def initialize():
 
     # Indicates the bot's OATH token
     global bot_OATH_token
-    bot_OATH_token = os.environ["BOT_OATH_TOKEN"]  # Here you have to put the OATH token of the bot (variable type: string. Example: "1234anb7890")
+    bot_OATH_token = get_env_variable('BOT_OATH_TOKEN')  # Here you have to put the OATH token of the bot (variable type: string. Example: "1234anb7890")
 
     # Indicates the bot's user access token
     global bot_access_token
@@ -34,15 +53,15 @@ def initialize():
 
     # Indicates the bot's client ID
     global bot_client_id
-    bot_client_id = os.environ["BOT_CLIENT_ID"]  # Here you have to put the client ID of the bot (variable type: string) (Example: "123sd45gsds90")
+    bot_client_id = get_env_variable('BOT_CLIENT_ID')  # Here you have to put the client ID of the bot (variable type: string) (Example: "123sd45gsds90")
 
     # Indicates the bot's client secret
     global bot_client_secret
-    bot_client_secret = os.environ["BOT_CLIENT_SECRET"]  # Here you have to put the client secret of the bot (variable type: string) (Example: "1234q567sfs890")
+    bot_client_secret = get_env_variable('BOT_CLIENT_SECRET')  # Here you have to put the client secret of the bot (variable type: string) (Example: "1234q567sfs890")
 
     # Indicates the bot's authorization code
     global bot_authorization_code
-    bot_authorization_code = os.environ["BOT_AUTH_CODE"]  # Here you have to put the authorization code of the bot (variable type: string) (Example: "1234q567sfs890")
+    bot_authorization_code = get_env_variable('BOT_AUTH_CODE')  # Here you have to put the authorization code of the bot (variable type: string) (Example: "1234q567sfs890")
 
 
     # Variables for Vons
